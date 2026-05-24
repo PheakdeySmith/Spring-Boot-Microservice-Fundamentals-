@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(int id) {
-        ProductEntity entity = productRepository.findbyId(id);
+        ProductEntity entity = productRepository.findById(id).orElse(null);
         if (entity == null) {
             throw new RuntimeException("Product not found");
         }
@@ -49,20 +49,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(int id, ProductRequest request) {
-        ProductEntity existingEntity = productRepository.findbyId(id);
+        ProductEntity existingEntity = productRepository.findById(id).orElse(null);
         if (existingEntity == null) {
             throw new RuntimeException("Product not found with id: " + id);
         }
 
         ProductEntity updatedEntity = productMapper.toEntity(request);
-        updatedEntity.setId(id); // Plain integer assignment here bro
+        updatedEntity.setId(id);
 
-        productRepository.update(updatedEntity);
+        productRepository.save(updatedEntity);
     }
 
     @Override
     public void deleteProduct(int id) {
-        ProductEntity existingEntity = productRepository.findbyId(id);
+        ProductEntity existingEntity = productRepository.findById(id).orElse(null);
         if (existingEntity == null) {
             throw new RuntimeException("Product not found with id: " + id);
         }
